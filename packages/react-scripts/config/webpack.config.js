@@ -70,6 +70,8 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/;
 
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
@@ -162,6 +164,17 @@ module.exports = function (webpackEnv) {
         }
       );
     }
+    return loaders;
+  };
+
+  // 添加less-loader
+  const getLessLoaderUse = (cssOptions, lessOptions) => {
+    const loaders = getStyleLoaders(cssOptions, 'less-loader');
+    loaders.splice(loaders.length - 1, 1,
+      {
+        loader: require.resolve('less-loader'),
+        options: lessOptions
+      });
     return loaders;
   };
 
@@ -571,6 +584,29 @@ module.exports = function (webpackEnv) {
                 },
                 'sass-loader'
               ),
+            },
+            {
+              test: lessRegex,
+              use: getLessLoaderUse({
+                importLoaders: 3,
+              }, {
+                javascriptEnabled: true,
+                modifyVars: themesJson,
+                source: shouldUseSourceMap,
+              }),
+            },
+            {
+              test: lessModuleRegex,
+              use: getLessLoaderUse({
+                importLoaders: 3,
+              }, {
+                modules: true,
+                javascriptEnabled: true,
+                modifyVars: themesJson,
+                source: shouldUseSourceMap,
+                localIdentName: '[path][name]__[local]--[hash:base64:5]',
+
+              }),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
