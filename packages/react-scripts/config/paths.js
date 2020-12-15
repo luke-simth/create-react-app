@@ -74,6 +74,7 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
+  themesJson: resolveApp('themes.json'),
 };
 
 // @remove-on-eject-begin
@@ -102,6 +103,8 @@ module.exports = {
   ownNodeModules: resolveOwn('node_modules'), // This is empty on npm 3
   appTypeDeclarations: resolveApp('src/react-app-env.d.ts'),
   ownTypeDeclarations: resolveOwn('lib/react-app.d.ts'),
+  themesJson: resolveApp('themes.json'),
+
 };
 
 const ownPackageJson = require('../package.json');
