@@ -148,7 +148,7 @@ module.exports = function (webpackEnv) {
               exclude: /(node_module)/, //默认false，可以（reg）利用正则表达式排除某些文件夹的方法，例如/(node_module)/ 。如果想把前端UI框架内的px也转换成rem，请把此属性设为默认值
               mediaQuery: false, //（布尔值）允许在媒体查询中转换px。
               minPixelValue: 3, //设置要替换的最小像素值(3px会被转rem)。 默认 0
-            }),
+            })
           ],
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
         },
@@ -469,6 +469,7 @@ module.exports = function (webpackEnv) {
                   isEnvDevelopment &&
                     shouldUseReactRefresh &&
                     require.resolve('react-refresh/babel'),
+
                   [require.resolve("@babel/plugin-proposal-decorators"), { "legacy": true }],
                   [require.resolve("@babel/plugin-proposal-class-properties"), { "loose" : true }],
                   [
@@ -477,7 +478,14 @@ module.exports = function (webpackEnv) {
                       "libraryName": "antd-mobile",
                       "style": "css"
                     }
-                  ]
+                  ],
+                  [
+                    require.resolve('babel-plugin-react-css-modules'),
+                    {
+                      generateScopedName: '[name]__[local]',
+                      filetypes: { '.less': { syntax: 'postcss-less' } },
+                    },
+                  ],
                 ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -602,6 +610,20 @@ module.exports = function (webpackEnv) {
               ),
             },
             {
+              test: lessModuleRegex,
+              use: getLessLoaderUse({
+                importLoaders: 3,
+                modules: {
+                  localIdentName: '[name]__[local]',
+                }
+              }, {
+                modules: true,
+                javascriptEnabled: true,
+                modifyVars: themesJson,
+                source: shouldUseSourceMap,
+              }),
+            },
+            {
               test: lessRegex,
               use: getLessLoaderUse({
                 importLoaders: 3,
@@ -609,19 +631,6 @@ module.exports = function (webpackEnv) {
                 javascriptEnabled: true,
                 modifyVars: themesJson,
                 source: shouldUseSourceMap,
-              }),
-            },
-            {
-              test: lessModuleRegex,
-              use: getLessLoaderUse({
-                importLoaders: 3,
-              }, {
-                modules: true,
-                javascriptEnabled: true,
-                modifyVars: themesJson,
-                source: shouldUseSourceMap,
-                localIdentName: '[path][name]__[local]--[hash:base64:5]',
-
               }),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
