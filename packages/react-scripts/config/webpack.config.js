@@ -74,6 +74,26 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 const lessRegex = /\.less$/;
 const lessModuleRegex = /\.module\.less$/;
 
+const loaderUtils = require('loader-utils');
+
+/**
+ * 由于入参不一致，这里包装一层调用getCSSModulesLocalIdent
+ * @param name 原始类名
+ * @param filename 样式文件路径
+ */
+function generateScopedName(name, filename) {
+    const loaderContext = {
+        rootContext: process.cwd(), // 保持与webpack loader context的rootContext一致（默认是项目根目录）
+        resourcePath: filename
+    };
+    return getCSSModuleLocalIdent(
+        loaderContext,
+        undefined,
+        name,
+        {}
+    );
+}
+
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
     return false;
@@ -374,7 +394,7 @@ module.exports = function (webpackEnv) {
         new ModuleScopePlugin(paths.appSrc, [
           paths.appPackageJson,
           reactRefreshOverlayEntry,
-        ]),
+        ])
       ],
     },
     resolveLoader: {
@@ -476,13 +496,16 @@ module.exports = function (webpackEnv) {
                     require.resolve("babel-plugin-import"),
                     {
                       "libraryName": "antd-mobile",
-                      "style": "css"
+                      "style": true
                     }
                   ],
                   [
-                    require.resolve('babel-plugin-react-css-modules'),
+                    'react-css-modules',
                     {
-                      generateScopedName: '[name]__[local]',
+                      webpackHotModuleReloading: true,
+                      autoResolveMultipleImports: true,
+                      exclude: 'node_modules',
+                      generateScopedName,
                       filetypes: { '.less': { syntax: 'postcss-less' } },
                     },
                   ],
@@ -614,10 +637,10 @@ module.exports = function (webpackEnv) {
               use: getLessLoaderUse({
                 importLoaders: 3,
                 modules: {
-                  localIdentName: '[name]__[local]',
+                  getLocalIdent: getCSSModuleLocalIdent,
+                  localIdentName: '[local]--[hash:base64]',
                 }
               }, {
-                modules: true,
                 javascriptEnabled: true,
                 modifyVars: themesJson,
                 source: shouldUseSourceMap,
