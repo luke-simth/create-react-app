@@ -27,6 +27,8 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const vConsolePlugin = require('vconsole-webpack-plugin')
+
 const paths = require('./paths');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
@@ -856,6 +858,10 @@ module.exports = function (webpackEnv) {
             }),
           },
         },
+        !isEnvProduction && new vConsolePlugin({
+          filter: [], // 需要过滤的入口文件
+          enable: !isEnvProduction
+        }),
       }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.

@@ -1,6 +1,6 @@
 {
   "name": "react-scripts-jack",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "description": "Configuration and scripts for Create React App.",
   "repository": {
     "type": "git",
@@ -93,7 +93,8 @@
     "@babel/plugin-proposal-decorators": "^7.12.1",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "babel-plugin-react-css-modules": "^5.2.6",
-    "postcss-less": "^4.0.0"
+    "postcss-less": "^4.0.0",
+    "vconsole-webpack-plugin": "^1.5.2"
   },
   "devDependencies": {
     "react": "^17.0.1",
