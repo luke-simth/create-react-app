@@ -859,7 +859,7 @@ module.exports = function (webpackEnv) {
           },
         },
       }),
-      !isEnvProduction && new vConsolePlugin({
+      !isEnvProduction && process.env.V_CONSOLE_PLUGIN !== 'disabled' && new vConsolePlugin({
         filter: [], // 需要过滤的入口文件
         enable: !isEnvProduction
       }),
