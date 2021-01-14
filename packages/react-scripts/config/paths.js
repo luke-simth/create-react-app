@@ -75,6 +75,7 @@ module.exports = {
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
   themesJson: resolveApp('themes.json'),
+  px2remConfig: resolveApp('px2rem.json'),
 };
 
 // @remove-on-eject-begin
@@ -104,6 +105,7 @@ module.exports = {
   appTypeDeclarations: resolveApp('src/react-app-env.d.ts'),
   ownTypeDeclarations: resolveOwn('lib/react-app.d.ts'),
   themesJson: resolveApp('themes.json'),
+  px2remConfig: resolveApp('px2rem.json'),
 
 };
 
@@ -141,6 +143,8 @@ if (
     ownNodeModules: resolveOwn('node_modules'),
     appTypeDeclarations: resolveOwn(`${templatePath}/src/react-app-env.d.ts`),
     ownTypeDeclarations: resolveOwn('lib/react-app.d.ts'),
+    themesJson: resolveApp('themes.json'),
+    px2remConfig: resolveApp('px2rem.json'),
   };
 }
 // @remove-on-eject-end
